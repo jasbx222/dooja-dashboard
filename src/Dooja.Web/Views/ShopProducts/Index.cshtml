@@ -1,0 +1,8 @@
+@model IEnumerable<Product>
+@{ViewData["Title"]="المنتجات";}
+<div class="page-heading"><div><h1>المنتجات</h1><p>الأسعار والمخزون من قاعدة البيانات. الأرشفة تُبقي الطلبات السابقة.</p></div><a class="btn primary" asp-action="Create">منتج جديد</a></div>
+<form method="get" class="toolbar"><input name="q" value="@ViewBag.Q" placeholder="بحث بالاسم"/><button class="btn ghost">بحث</button></form>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>المنتج</th><th>التصنيف</th><th>السعر</th><th>المخزون</th><th>الحالة</th><th></th></tr></thead><tbody>
+@if(!Model.Any()){<tr><td class="empty" colspan="6">لا توجد منتجات. أضف منتجاً من الداشبورد ليظهر في التطبيق.</td></tr>}
+@foreach(var p in Model){<tr><td><strong>@p.Name</strong>@if(p.Featured){<small>مميز</small>}</td><td>@p.Category?.Name</td><td>@p.Price.ToString("N0") د.ع @if(p.CompareAtPrice is long was){<small><del>@was.ToString("N0")</del></small>}</td><td>@p.Stock</td><td><span class="status @(p.Active?"ok":"bad")">@(p.Active?"معروض":"مخفي")</span></td><td><a class="btn ghost compact" asp-action="Edit" asp-route-id="@p.Id">تعديل</a></td></tr>}
+</tbody></table></div></div>

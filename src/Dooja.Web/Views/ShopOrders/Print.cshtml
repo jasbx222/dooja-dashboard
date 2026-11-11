@@ -1,0 +1,8 @@
+@model ShopOrder
+@{Layout=null;}
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"/><title>@Model.Number</title><link rel="stylesheet" href="~/css/dooja.css"/></head>
+<body style="background:white;padding:32px"><h1>ضوجة · @Model.Number</h1><p>@Model.CustomerName · @Model.Phone</p><p>@Model.Governorate · @Model.Area · @Model.Address</p>
+<table><thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>المجموع</th></tr></thead><tbody>
+@foreach(var i in Model.Items){<tr><td>@i.Name</td><td>@i.UnitPrice.ToString("N0")</td><td>@i.Qty</td><td>@i.LineTotal.ToString("N0")</td></tr>}
+</tbody></table><p>التوصيل @Model.DeliveryFee.ToString("N0") د.ع</p><h2>الإجمالي @Model.Total.ToString("N0") د.ع · @Model.PayMethod · @Model.Status</h2>
+<button class="btn primary" onclick="print()">طباعة</button></body></html>

@@ -1,0 +1,23 @@
+@model Product
+@{ViewData["Title"]=Model.Id==0?"منتج جديد":"تعديل منتج";}
+<div class="page-heading"><div><h1>@ViewData["Title"]</h1><p>سعر البيع هو الذي يُحسب في الطلب. سعر قبل الخصم للعرض فقط.</p></div><a class="btn ghost" asp-action="Index">رجوع</a></div>
+<form asp-action="Save" method="post" class="panel edit-form"><input asp-for="Id" type="hidden"/><div asp-validation-summary="All" class="validation"></div>
+<div class="form-grid">
+<div><label asp-for="CategoryId">التصنيف</label><select asp-for="CategoryId" asp-items="ViewBag.Categories"></select></div>
+<div><label asp-for="Name">الاسم</label><input asp-for="Name"/></div>
+<div><label asp-for="Price">سعر البيع د.ع</label><input asp-for="Price" min="0"/></div>
+<div><label asp-for="CompareAtPrice">السعر قبل الخصم (اختياري)</label><input asp-for="CompareAtPrice" min="0"/></div>
+<div><label asp-for="Stock">المخزون</label><input asp-for="Stock" min="0"/></div>
+<div class="check-group"><label><input asp-for="Active"/> معروض في المتجر</label><label><input asp-for="Featured"/> مميز</label></div>
+</div>
+<label asp-for="Description">الوصف</label><textarea asp-for="Description" rows="4"></textarea>
+<label asp-for="Specs">المواصفات</label><textarea asp-for="Specs" rows="4"></textarea>
+<div class="form-actions"><button class="btn primary">حفظ</button>@if(Model.Id!=0){<button class="btn ghost" formaction="@Url.Action("Archive", new { id = Model.Id })" formmethod="post" onclick="return confirm('أرشفة المنتج؟')">أرشفة</button>}</div>
+</form>
+@if(Model.Id!=0){
+<div class="panel"><div class="section-head"><h2>الصور</h2></div>
+<div class="place-mini-grid">
+@foreach(var image in Model.Images.OrderBy(x=>x.SortOrder)){<div class="place-mini"><img src="@image.Path" alt="" style="width:100%;height:120px;object-fit:cover;border-radius:12px"/><form asp-action="DeleteImage" method="post"><input type="hidden" name="id" value="@image.Id"/><button class="text-btn">حذف</button></form></div>}
+</div>
+<form asp-action="Upload" method="post" enctype="multipart/form-data" class="form-actions"><input type="hidden" name="id" value="@Model.Id"/><input type="file" name="files" accept="image/jpeg,image/png,image/webp" multiple/><button class="btn soft">رفع</button></form>
+</div>}

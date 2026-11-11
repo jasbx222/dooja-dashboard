@@ -1,0 +1,10 @@
+@model IEnumerable<InventoryTransaction>
+@{ViewData["Title"]="المخزون"; var products=(IEnumerable<Product>)ViewBag.Products; var low=(int)ViewBag.Low;}
+<div class="page-heading"><div><h1>المخزون</h1><p>كل تغيير يُسجل مع السبب. البيع يرفض الكمية التي تتجاوز المتوفر.</p></div></div>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>المنتج</th><th>المتوفر</th><th>تنبيه</th><th>تعديل</th></tr></thead><tbody>
+@foreach(var p in products){<tr><td><strong>@p.Name</strong><small>@p.Category?.Name</small></td><td>@p.Stock</td><td>@if(p.Stock==0){<span class="status bad">نفد</span>}else if(p.Stock<=low){<span class="status pending">منخفض</span>}</td><td><form asp-action="Adjust" method="post" class="inline-form"><input type="hidden" name="productId" value="@p.Id"/><input name="delta" type="number" placeholder="+/-" style="width:80px"/><input name="note" placeholder="سبب التعديل" required/><button class="btn ghost compact">حفظ</button></form></td></tr>}
+</tbody></table></div></div>
+<div class="panel"><div class="section-head"><h2>سجل الحركة</h2></div><div class="table-wrap"><table><thead><tr><th>الوقت UTC</th><th>المنتج</th><th>التغيير</th><th>بعدها</th><th>السبب</th><th>ملاحظة</th></tr></thead><tbody>
+@if(!Model.Any()){<tr><td class="empty" colspan="6">لا توجد حركات مخزون بعد.</td></tr>}
+@foreach(var t in Model){<tr><td>@t.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td><td>@t.Product?.Name</td><td>@t.Delta</td><td>@t.StockAfter</td><td>@t.Reason</td><td>@t.Note</td></tr>}
+</tbody></table></div></div>

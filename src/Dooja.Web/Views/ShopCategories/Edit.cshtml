@@ -1,0 +1,7 @@
+@model ProductCategory
+@{ViewData["Title"]=Model.Id==0?"تصنيف جديد":"تعديل تصنيف";}
+<div class="page-heading"><div><h1>@ViewData["Title"]</h1></div><a class="btn ghost" asp-action="Index">رجوع</a></div>
+<form asp-action="Save" method="post" class="panel edit-form"><input asp-for="Id" type="hidden"/><div asp-validation-summary="All" class="validation"></div>
+<div class="form-grid"><div><label asp-for="Name">الاسم</label><input asp-for="Name"/></div><div><label asp-for="SortOrder">ترتيب العرض</label><input asp-for="SortOrder"/></div><div class="check-group"><label><input asp-for="Active"/> ظاهر في التطبيق</label></div></div>
+<div class="form-actions"><button class="btn primary">حفظ</button>@if(Model.Id!=0){<button class="btn ghost" formaction="@Url.Action("Archive", new { id = Model.Id })" formmethod="post">أرشفة</button>}</div></form>
+@if(Model.Id!=0){<form asp-action="Upload" method="post" enctype="multipart/form-data" class="panel"><h2>صورة التصنيف</h2>@if(Model.ImagePath!=null){<img src="@Model.ImagePath" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:16px"/>}<div class="form-actions"><input type="hidden" name="id" value="@Model.Id"/><input type="file" name="file" accept="image/jpeg,image/png,image/webp"/><button class="btn soft">رفع</button></div></form>}

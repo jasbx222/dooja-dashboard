@@ -1,11 +1,13 @@
 using Dooja.Web.Models;
+using Dooja.Web.Services;
 using Microsoft.AspNetCore.Identity;
 namespace Dooja.Web.Data;
 public static class Seed
 {
     public static async Task Run(DoojaDb db, IConfiguration config, IWebHostEnvironment env)
     {
-        await db.Database.EnsureCreatedAsync();
+        await ShopSchema.Apply(db);
+        await new ShopService(db, Microsoft.Extensions.Logging.Abstractions.NullLogger<ShopService>.Instance, config).EnsureDefaults();
         if (!db.Users.Any(x => x.Role == "Admin"))
         {
             var password = config["Admin:Password"];
@@ -13,7 +15,7 @@ public static class Seed
             var admin = new AppUser { Phone = "07700000000", Name = "مدير ضوجة", Role = "Admin" };
             admin.PasswordHash = new PasswordHasher<AppUser>().HashPassword(admin, password); db.Users.Add(admin); await db.SaveChangesAsync();
         }
-        if (!config.GetValue<bool>("Seed:Demo")) return;
+        if (!env.IsDevelopment() || !config.GetValue("Seed:Demo", false)) return;
         if (db.Places.Any()) return;
         await using var transaction = await db.Database.BeginTransactionAsync();
         var customer = new AppUser { Phone = "07700000001", Name = "حسين علي", Area = "المنصور", Birth = "12 / 05 / 2001", Points = 1240 };

@@ -1,0 +1,8 @@
+@model IEnumerable<ShopOrder>
+@{ViewData["Title"]="طلبات المتجر";}
+<div class="page-heading"><div><h1>طلبات المتجر</h1><p>البحث والفلترة على الطلبات المحفوظة.</p></div></div>
+<form method="get" class="toolbar"><input name="q" value="@ViewBag.Q" placeholder="رقم الطلب أو الاسم أو الهاتف"/><select name="status"><option value="">كل الحالات</option>@foreach(var s in (string[])ViewBag.Statuses){<option value="@s" selected="@(ViewBag.Status as string==s)">@s</option>}</select><input type="date" name="from" value="@ViewBag.From"/><input type="date" name="to" value="@ViewBag.To"/><button class="btn ghost">تصفية</button></form>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>الطلب</th><th>الزبون</th><th>الإجمالي</th><th>الدفع</th><th>الحالة</th><th></th></tr></thead><tbody>
+@if(!Model.Any()){<tr><td class="empty" colspan="6">لا توجد طلبات ضمن هذا البحث.</td></tr>}
+@foreach(var o in Model){<tr><td><strong>@o.Number</strong><small>@o.CreatedAt.ToString("yyyy-MM-dd HH:mm") UTC</small></td><td>@o.CustomerName<small>@o.Phone</small></td><td>@o.Total.ToString("N0") د.ع</td><td>@o.PayMethod</td><td><span class="status @(o.Status=="ملغي"?"bad":o.Status=="تم التوصيل"?"ok":"pending")">@o.Status</span></td><td><a class="btn ghost compact" asp-action="Detail" asp-route-id="@o.Id">التفاصيل</a></td></tr>}
+</tbody></table></div></div>

@@ -1,0 +1,16 @@
+@model ShopOrder
+@{ViewData["Title"]=Model.Number;}
+<div class="page-heading"><div><h1>@Model.Number</h1><p>@Model.CustomerName · @Model.Phone · @Model.Governorate / @Model.Area</p></div><div><a class="btn ghost" asp-action="Print" asp-route-id="@Model.Id" target="_blank">طباعة</a> <a class="btn ghost" asp-action="Index">رجوع</a></div></div>
+<div class="split-grid"><div class="panel"><div class="section-head"><h2>المنتجات</h2><span class="status pending">@Model.Status</span></div>
+<div class="table-wrap"><table><thead><tr><th>المنتج</th><th>السعر وقت الشراء</th><th>الكمية</th><th>المجموع</th></tr></thead><tbody>
+@foreach(var i in Model.Items){<tr><td>@i.Name</td><td>@i.UnitPrice.ToString("N0")</td><td>@i.Qty</td><td>@i.LineTotal.ToString("N0")</td></tr>}
+</tbody></table></div>
+<p>البضاعة @Model.Subtotal.ToString("N0") د.ع · الخصم المعروض @Model.Discount.ToString("N0") · التوصيل @Model.DeliveryFee.ToString("N0")</p>
+<p><strong>الإجمالي @Model.Total.ToString("N0") د.ع</strong> · @Model.PayMethod</p>
+<p>@Model.Address</p>
+@if(!string.IsNullOrWhiteSpace(Model.Notes)){<p>ملاحظات الزبون: @Model.Notes</p>}
+</div>
+<div>
+@if(((string[])ViewBag.Statuses).Length>0){<form asp-action="Status" method="post" class="panel"><input type="hidden" name="id" value="@Model.Id"/><label>الحالة التالية</label><select name="status">@foreach(var s in (string[])ViewBag.Statuses){<option>@s</option>}</select><label>ملاحظة إدارية</label><textarea name="note" rows="3"></textarea><div class="form-actions"><button class="btn primary">تحديث الحالة</button></div></form>}
+<div class="panel"><h2>سجل الحالة</h2>@foreach(var e in Model.Events.OrderBy(x=>x.Id)){<p><strong>@e.Status</strong> · @e.Actor<small>@e.CreatedAt.ToString("yyyy-MM-dd HH:mm") UTC — @e.Note</small></p>}</div>
+</div></div>

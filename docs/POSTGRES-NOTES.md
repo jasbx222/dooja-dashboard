@@ -1,6 +1,6 @@
 # Postgres provider patch notes
 
-Postgres support is already in this repository (`Database:Provider=Postgres` plus `ConnectionStrings:Default`). The notes below describe that behavior. An older external patch, if you still have it, applied the same change:
+Apply against a copy of `dooja-dashboard` (do not modify the original owned tree in place unless intentional):
 
 ```bash
 python3 /workspace/dooja-deploy/apply_postgres_patch.py /path/to/dooja-dashboard

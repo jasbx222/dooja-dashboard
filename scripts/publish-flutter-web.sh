@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# Publish the Flutter web app from jasbx222/dooja-app into this server's wwwroot/app.
-# Usage:
-#   FLUTTER_APP_DIR=/path/to/dooja-app ./scripts/publish-flutter-web.sh
-# If FLUTTER_APP_DIR is unset, a sibling checkout named dooja-app is used when present.
+# Publish the Flutter web app into this server's wwwroot/app.
+# From the monorepo, the Flutter project is the parent of dashboard/.
+# From the standalone dashboard repo, set FLUTTER_APP_DIR or place dooja-app next to this repo.
 set -euo pipefail
 DASH_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 if [[ -n "${FLUTTER_APP_DIR:-}" ]]; then
   APP_ROOT="$(cd "$FLUTTER_APP_DIR" && pwd)"
+elif [[ -f "$DASH_ROOT/../pubspec.yaml" ]]; then
+  APP_ROOT="$(cd "$DASH_ROOT/.." && pwd)"
 elif [[ -f "$DASH_ROOT/../dooja-app/pubspec.yaml" ]]; then
   APP_ROOT="$(cd "$DASH_ROOT/../dooja-app" && pwd)"
 else

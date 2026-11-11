@@ -1,0 +1,14 @@
+@{ViewData["Title"]="مبيعات المتجر"; var days=(IEnumerable<ShopDayRow>)ViewBag.Days; var best=(IEnumerable<ShopSoldRow>)ViewBag.Best; var least=(IEnumerable<ShopSoldRow>)ViewBag.Least; var max=(long)ViewBag.Peak;}
+<div class="page-heading"><div><h1>مبيعات المتجر</h1><p>الأرقام محسوبة من الطلبات غير الملغاة داخل الفترة.</p></div></div>
+<form method="get" class="toolbar"><input type="date" name="from" value="@ViewBag.From"/><input type="date" name="to" value="@ViewBag.To"/><button class="btn ghost">عرض</button></form>
+<div class="kpi-grid">
+<div class="kpi"><div>المبيعات <i class="green">د</i></div><strong>@(((long)ViewBag.Revenue).ToString("N0"))</strong><small>دينار من الطلبات غير الملغاة</small></div>
+<div class="kpi"><div>الطلبات <i>▦</i></div><strong>@ViewBag.Orders</strong><small>كل الحالات</small></div>
+<div class="kpi"><div>بانتظار التأكيد <i class="amber">!</i></div><strong>@ViewBag.Pending</strong></div>
+<div class="kpi"><div>تم التوصيل / ملغي <i>✓</i></div><strong>@ViewBag.Completed / @ViewBag.Cancelled</strong></div>
+</div>
+<div class="panel"><div class="section-head"><h2>المبيعات اليومية</h2></div><div class="chart">
+@foreach(var d in days){<div class="chart-col"><strong>@d.Total.ToString("N0")</strong><div class="bar-track"><div style="height:@(d.Total*100/max)%"></div></div><small>@d.Label</small></div>}
+</div></div>
+<div class="split-grid"><div class="panel"><h2>الأكثر مبيعاً</h2><div class="table-wrap"><table><tbody>@if(!best.Any()){<tr><td class="empty">لا مبيعات في هذه الفترة.</td></tr>}@foreach(var r in best){<tr><td>@r.Name</td><td>@r.Qty</td><td>@r.Total.ToString("N0")</td></tr>}</tbody></table></div></div>
+<div class="panel"><h2>الأقل مبيعاً</h2><div class="table-wrap"><table><tbody>@if(!least.Any()){<tr><td class="empty">لا مبيعات في هذه الفترة.</td></tr>}@foreach(var r in least){<tr><td>@r.Name</td><td>@r.Qty</td><td>@r.Total.ToString("N0")</td></tr>}</tbody></table></div></div></div>

@@ -1,0 +1,7 @@
+@model IEnumerable<ProductCategory>
+@{ViewData["Title"]="تصنيفات المتجر";}
+<div class="page-heading"><div><h1>التصنيفات</h1><p>تظهر في التطبيق بالترتيب الذي تحدده هنا.</p></div><a class="btn primary" asp-action="Create">تصنيف جديد</a></div>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>الاسم</th><th>الترتيب</th><th>الحالة</th><th></th></tr></thead><tbody>
+@if(!Model.Any()){<tr><td class="empty" colspan="4">لا توجد تصنيفات بعد.</td></tr>}
+@foreach(var c in Model){<tr><td><strong>@c.Name</strong></td><td>@c.SortOrder</td><td><span class="status @(c.Archived?"bad":c.Active?"ok":"pending")">@(c.Archived?"مؤرشف":c.Active?"ظاهر":"مخفي")</span></td><td>@if(!c.Archived){<a class="btn ghost compact" asp-action="Edit" asp-route-id="@c.Id">تعديل</a>}</td></tr>}
+</tbody></table></div></div>
